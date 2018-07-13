@@ -2,19 +2,19 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>Book Trade</title>
     <link href="Content/bootstrap.css" rel="stylesheet" />
     <link href="Content/chosen.css" rel="stylesheet" />
     <link href="Content/Site.css" rel="stylesheet" />
     <link href="Content/bookTrade.css" rel="stylesheet" />
     <style>
-        body {
-            background-color: beige;
-        }
     </style>
 </head>
 <body>
-    <div class="logo">BookTrade</div>
+    <div class="barra">
+        <div class="textoBarra">BookTrade</div>
+        <div class="sobre">Sobre</div>
+    </div>
     <div id="pagina">
 
     </div>
@@ -27,29 +27,42 @@
     <script>
         function geraLivroParaLista(item) {
             var holder = $("<div>"); // faz o mesmo que var holder = document.createElement("div");
-            holder.addClass("seg");
+            holder.addClass("cadalivro");
+
+
+            var img = $("<img>");
+            img.attr("src", "imagens/" + item.fotografia); //Adiciona  a Imagem do livro 
+            img.css({ width: "85%", minHeight: "85%", height: "auto", marginTop: "-22px", objectFit: "contain" }); 
+            holder.append(img);
 
             var texto = $("<div>"); // cria uma Div
             texto.addClass("texto"); //Adiciona uma classe
 
-            var h2 = $("<h2>");
-            h2.text(item.titulo);
-            texto.append(h2);
+            var a = $("<a>");
+            a.text(item.titulo);
+            texto.append(a);
             holder.append(texto);
-            var img = $("<img>");
-            img.attr("src", "imagens/" + item.id + item.imagem); //Adiciona  a Imagem do livro 
-            img.css({ width: "100%", minHeight: "100%", height: "auto", marginTop: "-65px" }); 
-            holder.append(img);
-            return holder;
+            
+            var parag = $("<br>");
+            texto.append(parag);
+            holder.append(texto);
+
+
+            var aAutor = $("<a>");
+            aAutor.text("De "+item.autoresNome);
+            texto.append(aAutor);
+            holder.append(texto);
+
+            return holder; 
         }
 
 
         function generateListLivros(items) {
             var holder = $("<div>");
-            holder.addClass("prim");
+            holder.addClass("listalivros");
             var i;
             for (i = 0; i < items.length; i++) {
-                holder.append(geraLivrosParaLista(items[i]));
+                holder.append(geraLivroParaLista(items[i]));
             }
             $("#pagina").html("").append(holder);
         }
@@ -66,7 +79,7 @@
         }
 
         $(window).load(function () {
-            getFilmesList().then(function (r) {
+            getLivrosList().then(function (r) {
                 generateListLivros(r);
             });
         });
