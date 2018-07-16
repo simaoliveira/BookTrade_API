@@ -7,82 +7,101 @@
     <link href="Content/chosen.css" rel="stylesheet" />
     <link href="Content/Site.css" rel="stylesheet" />
     <link href="Content/bookTrade.css" rel="stylesheet" />
-    <style>
-    </style>
 </head>
 <body>
     <div class="barra">
-        <div class="textoBarra">BookTrade</div>
-        <div class="sobre">Sobre</div>
+        <a class="textoBarra" style=" cursor: pointer; padding-left: 126px">BookTrade</a>
     </div>
     <div id="pagina">
 
     </div>
-
     <script src="Scripts/jquery-1.10.2.js"></script>
     <script src="Scripts/bootstrap.js"></script>
     <script src="Scripts/chosen.jquery.js"></script>
     <script src="Scripts/respond.js"></script>
+    <script src="Scripts/Autor.js"></script>
+    <script src="Scripts/Start.js"></script>
+    <script src="Scripts/Livros.js"></script>
+
 
     <script>
-        function geraLivroParaLista(item) {
-            var holder = $("<div>"); // faz o mesmo que var holder = document.createElement("div");
-            holder.addClass("cadalivro");
+        //Carrega as Informações Referente aos Autores
+        function loadAutor(idAutor) {
+            getAutorsDetails(idAutor).then(function (result) {
+
+                var div_holder_All = $("<div>");
+
+                var div_holder = $("<div>");
+                div_holder_All.append(div_holder);
+                div_holder.addClass("detailsLivro");
+
+                div_holder.append(AutorPic(result)); // Fotografia do autor
+
+                var div_holder_info = $("<div>");
+                div_holder.append(div_holder_info);
+
+                div_holder_info.append(autor(result)); // Nome e Data de Nascimento do autor
+
+                div_holder_info.append(Bibliografia(result)); // Biografia do autor
 
 
-            var img = $("<img>");
-            img.attr("src", "imagens/" + item.fotografia); //Adiciona  a Imagem do livro 
-            img.css({ width: "85%", minHeight: "85%", height: "auto", marginTop: "-22px", objectFit: "contain" }); 
-            holder.append(img);
+                $("#pagina").html("").append(div_holder_All);
 
-            var texto = $("<div>"); // cria uma Div
-            texto.addClass("texto"); //Adiciona uma classe
-
-            var a = $("<a>");
-            a.text(item.titulo);
-            texto.append(a);
-            holder.append(texto);
-            
-            var parag = $("<br>");
-            texto.append(parag);
-            holder.append(texto);
-
-
-            var aAutor = $("<a>");
-            aAutor.text("De "+item.autoresNome);
-            texto.append(aAutor);
-            holder.append(texto);
-
-            return holder; 
-        }
-
-
-        function generateListLivros(items) {
-            var holder = $("<div>");
-            holder.addClass("listalivros");
-            var i;
-            for (i = 0; i < items.length; i++) {
-                holder.append(geraLivroParaLista(items[i]));
-            }
-            $("#pagina").html("").append(holder);
-        }
-
-        function getLivrosList() {
-            return fetch("/api/livros", { headers: { Accept: "application/json" } })
-                .then(function (resposta) {
-                    if (resposta.status === 200) {
-                        return resposta.json();
-                    } else {
-                        return Promise.reject(new Error("Um Erro ocurreu"));
-                    }
-                });
-        }
-
-        $(window).load(function () {
-            getLivrosList().then(function (r) {
-                generateListLivros(r);
             });
+        }
+
+        //Carrega as informações Referentes aos livros
+        function loadBookDetails(idLivro) {
+            getBookDetails(idLivro).then(function (result) {
+
+                var div_holder_All = $("<div>");
+
+                var div_holder = $("<div>");
+                div_holder_All.append(div_holder);
+                div_holder.addClass("detailsLivro");
+
+                div_holder.append(BookCover(result)); //Capa do Livro
+
+                var div_holder_info = $("<div>");
+                div_holder.append(div_holder_info);
+
+                div_holder_info.append(Books(result)); // Nome do Livro
+
+                div_holder_info.append(BookAutors(result)); // Autor do Livro
+
+                div_holder_info.append(BookPublisher(result)); //Editora do Livro
+
+                div_holder_info.append(BookYear(result)); // Ano de lançamento do Livro
+
+                div_holder_info.append(BookLanguage(result)); //Idioma do Livro
+
+                div_holder_info.append(PageNumbers(result)); //Numero de páginas do livro
+
+                div_holder_info.append(BookCategory(result)); // Categoria do Livro
+
+                div_holder_info.append(sinopse(result)); // Sinopse do Livro
+
+                $("#pagina").html("").append(div_holder_All);
+
+            });
+        }
+
+        //Função para Iniciar a Pagina
+        function inicPage() {
+            getBookList().then(function (r) {
+                generateListBook(r);
+            });
+        }
+        //Primeira função a ser chamada
+        $(window).load(function () {
+            inicPage();
         });
+
+        //Clicar no Logo para voltar ao Inicio
+        $(".textoBarra").click(function () {
+            inicPage();
+        });
+
     </script>
 </body>
 </html>

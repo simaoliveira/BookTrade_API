@@ -16,7 +16,6 @@ namespace BookTrade.Models {
         [Required]
         public string Nome { get; set; }
 
-        [Column(TypeName = "date")]
         //formata a data para aparecer Ano/Mês/Dia
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime? DataNasc { get; set; }
